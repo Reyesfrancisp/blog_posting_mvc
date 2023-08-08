@@ -1,48 +1,40 @@
-  <div class="container mx-auto p-4">
-    <h2 class="my-10 mr-40 text-left text-xl font-bold mb-4 animate-fade-in font-sans text-white hover:text-color-800 ">Allow MoodSync to
-      weave its enchanting magic, transforming your feelings, dreams, or any musings into a mesmerizing kaleidoscope of
-      colors.
-    </h2>
+<section class="flex justify-around my-5">
+  <button class="new-entry bg-gradient-to-r from-orange-400 to-amber-500 hover:from-orange-500 hover:to-amber-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transition-colors duration-300" onclick="redirectToEntry()">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 20h.01M6 4h10a4 4 0 014 4v8a2 2 0 01-2 2H6a2 2 0 01-2-2V8a4 4 0 014-4z"/>
+    </svg>
+    Create Entry
+  </button>
 
-    <div class="relative">
-      <img src="https://img.freepik.com/free-photo/pretty-smiling-woman-with-curly-hair-wears-comfortable-soft-jumper-keeps-hands-collar-concentrated-away-has-dreamy-expression-isolated-yellow-background-copy-space-your-promotion_273609-57345.jpg"
-        alt="Curly haired women wearing yellow" class="w-full">
-      <div class="w-1/3 absolute bottom-0 left-0 top-5 right-60 p-4 bg-black bg-opacity-0 text-black text-base font-bold hover-gradient">
-        <p>Imagine your emotions embodied in a vibrant palette, ranging from tranquil blues to fiery reds.</p>
-        <div>
-          <a href="/register">
-        <button class="my-5 rounded-full border-solid border-2 border-white py-4 px-8 text-white font-bold text-sm hover:bg-teal-600">Sign Up</button></a>
-        </div>
-      </div>
+  <button class="view-graph bg-gradient-to-r from-blue-400 to-cyan-500 hover:from-blue-500 hover:to-cyan-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transition-colors duration-300" onclick="redirectToGraph()">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8 3v2m0 16v2m8-18v2m0 16v2M3 8h2m16 0h2M3 16h2m16 0h2M8 8h8M8 12h8M8 16h8" />
+    </svg>
+    View Graph
+  </button>
+</section>
 
+{{!-- section that outputs the data from the tables --}}
+<section class = "p-8">
+  {{#each entry}}
+  <!-- Clickable link with entry ID as a parameter -->
+<div class="flex flex-col justify-center rounded-lg p-2 mx-2 my-8 shadow-lg hover:shadow-2xl mx-auto w-full max-w-4xl transform bg-gradient-to-b from-gray-500 to-gray-900  hover:-translate-y-1 hover:scale-105">
+  <a href="/mood/{{this.id}}" class="block">
+    <section class="transform hover:shadow-xl {{this.color}} rounded-lg p-4">
+      <p class="font-mono italic font-bold text-black text-center text-xl md:text-2xl lg:text-3xl">{{this.title}}</p>
+      <p class="font-sans truncate font-semibold text-center text-black p-4 m-4 bg-gray-200 text-sm md:text-base lg:text-lg">{{this.entry}}</p>
+    </section>
+  </a>
+</div>
+  {{/each}}
 
-    </div>
+</section>
+<script>
+  function redirectToEntry() {
+    window.location.href = "/entry";
+  }
 
-    <div class="relative mt-8">
-      <img src="https://st5.depositphotos.com/1017228/64297/i/450/depositphotos_642970182-stock-photo-ginger-white-man-expressing-surprise.jpg"
-        alt="Man wearing green with beard pointing up" class="w-full">
-      <div class="w-1/3 absolute bottom-0 left-0 top-0 right-60 p-4 bg-black bg-opacity-0 text-white text-sm font-bold">
-        <p>Explore your emotions from a whole new angle: Where Words Become Vibrant Hues.</p>
-          <a href="/register">
-        <button class="my-10 rounded-full border-solid border-2 border-white py-4 px-8 text-white font-bold text-sm hover:bg-teal-600">Sign Up</button></a>
-        </div>
-      </div>
-       <div>
-    </div>
-
-    <div class="relative mt-8">
-      <img src="https://st4.depositphotos.com/1049680/31440/i/450/depositphotos_314403472-stock-photo-young-asian-chinese-man-wearing.jpg"
-        alt="sad man wearing blue" class="w-full">
-      <div class="w-1/3 absolute bottom-0 left-0 top-0 right-0 p-4 bg-black bg-opacity-0 text-white text-xs font-bold">
-        <p>Unlock the power of MoodSync and paint your emotions in hues you never thought possible.</p>
-          <a href="/register">
-        <button class="my-5 rounded-full border-solid border-2 border-white py-4 px-8 text-white font-bold text-sm hover:bg-teal-600">Sign Up</button></a>
-        </div>
-      </div>
-       <div>
-    </div>
-  </div>
-
-  <footer class="bg-zinc-900 text-gray-600 text-center text- py-4">
-    &copy; 2023 Unleash Your Emotions! | MoodSync
-  </footer>
+  function redirectToGraph() {
+    window.location.href = "/graph";
+    }
+</script>
