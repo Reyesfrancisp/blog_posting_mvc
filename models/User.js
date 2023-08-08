@@ -1,7 +1,7 @@
 const { Model, DataTypes } = require('sequelize');
 const { hash, compare } = require('bcrypt');
 const db = require('../db/connection');
-const Mood = require('./Mood');
+const Post = require('./Post');
 
 class User extends Model { }
 
@@ -48,9 +48,9 @@ User.prototype.validatePass = async function (formPassword) {
   return isValid;
 };
 
-// Define the association for User to Mood
-User.hasMany(Mood, { foreignKey: 'userId' });
-// Define the association for Mood to User
-Mood.belongsTo(User, { foreignKey: 'userId' });
+// Define the association for User to post
+User.hasMany(Post, { foreignKey: 'userId' });
+// Define the association for post to User
+Post.belongsTo(User, { foreignKey: 'userId' });
 
 module.exports = User;

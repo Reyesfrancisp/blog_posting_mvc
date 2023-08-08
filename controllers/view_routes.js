@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const User = require('../models/User');
-const Mood = require('../models/Mood');
+const Mood = require('../models/Post');
 const attachColor = require('../functions/color');
 // Middleware
 function isAuthenticated(req, res, next) {

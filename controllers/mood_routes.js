@@ -3,7 +3,7 @@ const axios = require("axios");
 const router = require('express').Router();
 const encodedParams = new URLSearchParams();
 const User = require('../models/User');
-const Mood = require('../models/Mood');
+const Mood = require('../models/Post');
 
 // Middleware
 function isAuthenticated(req, res, next) {

@@ -1,4 +1,4 @@
-DROP DATABASE IF EXISTS user_db;
-CREATE DATABASE user_db;
+DROP DATABASE IF EXISTS blog_post_db;
+CREATE DATABASE blog_post_db;
 
-USE user_db;
+USE blog_post_db;
