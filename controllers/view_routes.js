@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const User = require('../models/User');
-const Mood = require('../models/Post');
-const attachColor = require('../functions/color');
+const Post = require('../models/Post');
+
 // Middleware
 function isAuthenticated(req, res, next) {
   const isAuthenticated = req.session.user_id;
@@ -13,19 +13,10 @@ function isAuthenticated(req, res, next) {
 
 // Login page
 router.get('/login', (req, res) => {
-  if (req.session.user_id) return res.redirect('/mood');
+  if (req.session.user_id) return res.redirect('/');
 
   res.render('login', {
     isLogin: true
-  });
-});
-
-// Homepage
-router.get('/', (req, res) => {
-
-  res.render('index', {
-    isHome: true,
-    isLoggedIn: req.session.user_id
   });
 });
 
@@ -36,14 +27,17 @@ router.get('/register', (req, res) => {
   });
 });
 
-//display all posts
-router.get('/mood', isAuthenticated, async (req, res) => {
+// Homepage display all posts
+router.get('/', isAuthenticated, async (req, res) => {
   console.log("Got into the get route");
   try {
-  
-    res.render("mood", {
-      email: user.email,
-      entry: moods // Pass the moods data
+    // Fetch all posts from the database
+    const posts = await Post.findAll();
+
+    // Render the "post" template and pass the posts data
+    res.render("post", {
+      email: req.user.email, // Assuming the authenticated user is stored in req.user
+      posts: posts // Pass the posts data
     });
   } catch (error) {
     // Handle any errors
@@ -53,29 +47,29 @@ router.get('/mood', isAuthenticated, async (req, res) => {
 });
 
 
-// specific mood page
-router.get('/mood/:id', isAuthenticated, async (req, res) => {
+// specific post
+router.get('/:id', isAuthenticated, async (req, res) => {
   try {
     const user = await User.findByPk(req.session.user_id, {
-      include: Mood
+      include: post
     });
 
-    const moodId = req.params.id; // Get the mood ID from the URL parameter
-    const mood = await Mood.findOne({
+    const postId = req.params.id; // Get the post ID from the URL parameter
+    const post = await post.findOne({
       where: {
-        id: moodId,
+        id: postId,
         userId: user.id
       },
       raw: true
     });
 
-    if (!mood) {
-      // Handle the case if the mood is not found
-      return res.redirect("/mood");
+    if (!post) {
+      // Handle the case if the post is not found
+      return res.redirect("/");
     }
 
     res.render('display', {
-      id: mood.id,
+      id: post.id,
       email: user.email,
 
     });

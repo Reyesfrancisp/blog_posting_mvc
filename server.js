@@ -10,7 +10,7 @@ const db = require("./db/connection");
 // Import routes
 const user_routes = require("./controllers/user_routes");
 const view_routes = require("./controllers/view_routes");
-const mood_routes = require("./controllers/mood_routes");
+const post_routes = require("./controllers/post_routes");
 
 
 const app = express();
@@ -44,7 +44,7 @@ app.use(session({
 }));
 
 // Load Routes
-app.use("/", [mood_routes, view_routes, user_routes, graph]);
+app.use("/", [post_routes, view_routes, user_routes]);
 
 // Connect to the db and create all tables based off of our models
 db.sync({ force: false })

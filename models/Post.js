@@ -1,5 +1,6 @@
 const { Model, DataTypes } = require('sequelize');
 const db = require('../db/connection');
+const Comment = require('./Comment');
 
 class Post extends Model { }
 
@@ -22,7 +23,9 @@ Post.init({
   modelName: 'post',
 });
 
-// Define the association for Mood to User
-// Mood.belongsTo(User, { foreignKey: 'userId' });
+
+Post.hasMany(Comment, {foreignKey: 'userId'});
+
+Comment.belongsTo(Post, { foreignKey: 'userId' });
 
 module.exports = Post;

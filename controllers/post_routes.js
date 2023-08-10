@@ -1,7 +1,5 @@
 require("dotenv").config();
-const axios = require("axios");
 const router = require('express').Router();
-const encodedParams = new URLSearchParams();
 const User = require('../models/User');
 const Mood = require('../models/Post');
 
@@ -21,7 +19,6 @@ router.post('/entry', async (req, res) => {
     const user = await User.findByPk(req.session.user_id);
     const newEntry = req.body.entry;
     const newTitle = req.body.title.toUpperCase();
-    const moodData = await getMoodData(newEntry);
 
 
     Post.create({ userId: user.id, title: newTitle, entry: newEntry});
@@ -54,18 +51,11 @@ router.post('/:id', isAuthenticated, async (req, res) => {
     }
 
     const moodData = await getMoodData(req.body.entry);
-    const { joy, surprise, sadness, disgust, fear, anger } = moodData.emotions_normalized;
     
     // Update the mood entry with the new values
     mood.set({
       title: req.body.title.toUpperCase(),
-      entry: req.body.entry,
-      joy: percentage(joy),
-      surprise: percentage(surprise),
-      sadness: percentage(sadness),
-      disgust: percentage(disgust),
-      fear: percentage(fear),
-      anger: percentage(anger)
+      entry: req.body.entry
     });
 
     await mood.save();
