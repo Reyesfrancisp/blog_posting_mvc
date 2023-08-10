@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MoodSync</title>
+  <title>Blogzone</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -20,10 +20,10 @@
       <h1 class="text-5xl m-2 p-2">
         <a href="/">
         <span class="text-sky-600">
-          Mood
+          Blog
         </span>
         <span class="bg-gradient-to-r text-transparent from-red-500 to-orange-500 bg-clip-text">
-          Sync
+          Zone
         </span>
         </a>
       </h1>
@@ -37,14 +37,14 @@
       <a href="/logout" class="inline-block hover:bg-teal-600 border border-[1px] rounded-full px-3 py-1 mx-1 text-black border-white">Log Out</a>
       {{else}}
       {{#if isLoggedIn}}
-      <a href="/mood" class="inline-block hover:bg-teal-600 border border-[1px] rounded-full px-3 py-1 mx-1 text-black border-white">Mood</a>
+      <a href="/dashboard" class="inline-block hover:bg-teal-600 border border-[1px] rounded-full px-3 py-1 mx-1 text-black border-white">Mood</a>
       {{else}}
        <a href="/login" class="{{#if isLogin}}hidden{{/if}} hover:bg-teal-600 inline-block border border-[1px] rounded-full px-3 py-1 mx-1 text-white border-white padding-right 2px">Login</a>
       <a href="/register" class="{{#if isRegister}}hidden{{/if}} hover:bg-teal-600 inline-block border border-[1px] rounded-full px-3 py-1 mx-1 text-white border-white">Sign Up</a>
       {{/if}}
       {{/if}}
       <p class="{{#if isHome}}hidden{{/if}}{{#if isLogin}} hidden{{/if}}{{#if isRegister}} hidden{{/if}}">Welcome,
-        {{email}}</p>
+        {{user}}</p>
     </nav>
     </div>
 

@@ -45,7 +45,7 @@ router.post('/login', async (req, res) => {
     // User has been validated, create a session
     req.session.user_id = user.id;
 
-    res.redirect('/mood');
+    res.redirect('/');
 
   } catch (err) {
     console.error(err);
@@ -92,7 +92,7 @@ router.post('/register', async (req, res) => {
     const newUser = await User.create(req.body);
     req.session.user_id = newUser.id;
     console.log('Created ID');
-    res.redirect('/mood');
+    res.redirect('/');
 
   } catch (err) {
     // Log the error message to the console

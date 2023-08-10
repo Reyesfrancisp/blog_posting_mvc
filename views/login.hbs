@@ -1,10 +1,5 @@
-{{!-- error message --}}
-{{!-- {{#if error}}
-  <p class="error-message">Invalid credentials. Please check your email/username and password.</p>
-{{/if}} --}}
 
-
-<form id="login-form" class="login" action="/login" method="POST">
+<form id="login-form" class="login flex flex-col" action="/login" method="POST">
     <input class="user my-2 px-4" name="email" type="text" placeholder="username or email">
     <input class="pass my-2 px-4" name="password" type="password" placeholder="enter password">
     <button class="my-3 hover:bg-teal-600 rounded-full border-solid border-2 border-white py-4 px-8 text-white font-bold text-sm ">Log in</button>
@@ -14,7 +9,3 @@
 <div id="error-message-container-login"></div>
 
 <script src="/js/error.js"></script>
-{{!-- error message --}}
-{{!-- {{#if error}}
-  <p class="error-message">Invalid credentials. Please check your email/username and password.</p>
-{{/if}} --}}

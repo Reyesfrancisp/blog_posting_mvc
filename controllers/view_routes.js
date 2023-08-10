@@ -28,15 +28,14 @@ router.get('/register', (req, res) => {
 });
 
 // Homepage display all posts
-router.get('/', isAuthenticated, async (req, res) => {
+router.get('/', async (req, res) => {
   console.log("Got into the get route");
   try {
     // Fetch all posts from the database
     const posts = await Post.findAll();
 
     // Render the "post" template and pass the posts data
-    res.render("post", {
-      email: req.user.email, // Assuming the authenticated user is stored in req.user
+    res.render("index", {
       posts: posts // Pass the posts data
     });
   } catch (error) {

@@ -1,7 +1,8 @@
 require("dotenv").config();
 const router = require('express').Router();
 const User = require('../models/User');
-const Mood = require('../models/Post');
+const Post = require('../models/Post');
+const Comment = require('../models/Comment');
 
 // Middleware
 function isAuthenticated(req, res, next) {
@@ -35,11 +36,11 @@ router.post('/entry', async (req, res) => {
 router.post('/:id', isAuthenticated, async (req, res) => {
   try {
     const user = await User.findByPk(req.session.user_id, {
-      include: Mood
+      include: Post
     });
 
     const moodId = req.params.id;
-    const mood = await Mood.findOne({
+    const blogPost = await Post.findOne({
       where: {
         id: moodId,
         userId: user.id
@@ -50,18 +51,49 @@ router.post('/:id', isAuthenticated, async (req, res) => {
       return res.status(404).send('Mood not found');
     }
 
-    const moodData = await getMoodData(req.body.entry);
-    
     // Update the mood entry with the new values
-    mood.set({
+    blogPost.set({
       title: req.body.title.toUpperCase(),
       entry: req.body.entry
     });
 
-    await mood.save();
+    await post.save();
 
-    // Redirect the user to the mood page or display a success message
-    res.redirect('/mood');
+    // Redirect the user to the same page with updated info
+    res.redirect('/:id');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('An error occurred');
+  }
+});
+
+// provide the route to add a comment to a blog post
+router.post('/:postId/comments', isAuthenticated, async (req, res) => {
+  try {
+    const user = await User.findByPk(req.session.user_id);
+    const postId = req.params.postId;
+    const { text } = req.body; // Assuming the comment text is sent in the request body
+
+    // Find the blog post by ID
+    const post = await Post.findOne({
+      where: {
+        id: postId,
+      },
+    });
+
+    if (!post) {
+      return res.status(404).send('Post not found');
+    }
+
+    // Create a new comment
+    const comment = await Comment.create({
+      text: text,
+      postId: post.id,
+      userId: user.id,
+    });
+
+    // Redirect back to the blog post or somewhere else
+    res.redirect(`/posts/${postId}`);
   } catch (error) {
     console.error(error);
     res.status(500).send('An error occurred');
@@ -69,30 +101,75 @@ router.post('/:id', isAuthenticated, async (req, res) => {
 });
 
 
-router.delete('/:id', isAuthenticated, async (req, res) => {
+//provide a button to delete a comment if it's from that user
+router.delete('/:postId/comments/:commentId', isAuthenticated, async (req, res) => {
   try {
     const user = await User.findByPk(req.session.user_id, {
-      include: Mood
+      include: [Post, Comment],
     });
 
-    const moodId = req.params.id;
-    const mood = await Mood.findOne({
+    const postId = req.params.postId;
+    const commentId = req.params.commentId;
+
+    // Find the blog post by ID and user
+    const post = await Post.findOne({
       where: {
-        id: moodId,
-        userId: user.id
-      }
+        id: postId,
+        userId: user.id,
+      },
     });
 
-    if (!mood) {
-      return res.status(404).send('Mood not found');
+    if (!post) {
+      return res.status(404).send('Post not found');
     }
 
-    // Delete the mood entry from the database
-    await mood.destroy();
+    // Find the comment to delete under the specified post
+    const comment = await Comment.findOne({
+      where: {
+        id: commentId,
+        postId: post.id,
+      },
+    });
 
-    // Redirect to the mood page
+    if (!comment) {
+      return res.status(404).send('Comment not found');
+    }
 
-    res.redirect('/mood');
+    // Delete the comment from the database
+    await comment.destroy();
+
+    // Redirect back to the blog post or somewhere else
+    res.redirect('/');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('An error occurred');
+  }
+});
+
+//route to delete the blog post
+router.delete('/:blogPostId', isAuthenticated, async (req, res) => {
+  try {
+    const user = await User.findByPk(req.session.user_id, {
+      include: [Post, Comment], // Include both Post and Comment associations
+    });
+
+    const postID = req.params.blogPostId;
+    const post = await Post.findOne({ // Find the blog post by ID and user
+      where: {
+        id: postID,
+        userId: user.id,
+      },
+    });
+
+    if (!post) {
+      return res.status(404).send('Post not found');
+    }
+
+    // Delete the post entry from the database
+    await post.destroy();
+
+    // Redirect to the main page
+    res.redirect('/');
   } catch (error) {
     console.error(error);
     res.status(500).send('An error occurred');
