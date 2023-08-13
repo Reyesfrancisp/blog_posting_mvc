@@ -7,14 +7,18 @@
   </form>
 </div>
 
+
+
 <!-- Modal for displaying errors -->
-<div class="fixed inset-0 flex items-center justify-center z-50 hidden" id="errorModal">
+<div class="fixed inset-0 flex items-center justify-center z-50 {{#unless showError}} hidden{{/unless}}" id="errorModal">
   <div class="bg-white rounded-lg p-8 shadow-md">
-    <h3 class="text-lg font-semibold mb-4">Error</h3>
-    <p id="errorText"></p>
+    <h3 class="text-lg font-semibold mb-4">Error: Please check your password info</h3>
+    <p id="errorText" class="text-red-500"></p> <!-- Add text-red-500 class for error text color -->
     <button class="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600" id="closeErrorModal">Close</button>
   </div>
 </div>
+
+
 
 <script>
   // Listen for the error response and show the modal

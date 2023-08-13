@@ -33,24 +33,22 @@
 
         <nav class="hidden md:flex mr-10 justify-center md:justify-end font-medium" id="navLinks">
           <!-- Hide nav links on small screens, show on large screens -->
-          {{#if email}}
+          {{#if isLoggedIn}}
           <a href="/logout"
             class="inline-block hover:bg-teal-600 border border-[1px] rounded-full px-3 py-1 mx-1 text-black border-white">Log
             Out</a>
-          {{else}}
-          {{#if isLoggedIn}}
           <a href="/dashboard"
-            class="inline-block hover:bg-teal-600 border border-[1px] rounded-full px-3 py-1 mx-1 text-black border-white">Mood</a>
-          {{else}}
-          <a href="/login"
-            class="{{#if isLogin}}hidden{{/if}} hover:bg-teal-600 inline-block border border-[1px] rounded-full px-3 py-1 mx-1 text-white border-white padding-right 2px">Login</a>
-          <a href="/register"
-            class="{{#if isRegister}}hidden{{/if}} hover:bg-teal-600 inline-block border border-[1px] rounded-full px-3 py-1 mx-1 text-white border-white">Sign
-            Up</a>
-          {{/if}}
-          {{/if}}
-          <p class="{{#if isHome}}hidden{{/if}}{{#if isLogin}} hidden{{/if}}{{#if isRegister}} hidden{{/if}}">Welcome,
+            class="inline-block hover:bg-teal-600 border border-[1px] rounded-full px-3 py-1 mx-1 text-black border-white">Dashboard</a>
+          <p class="inline-block bg-neutral-600 border border-[1px] rounded-full px-3 py-1 mx-1 text-black border-white">Welcome,
             {{user}}</p>
+          {{/if}}
+
+          <a href="/login"
+            class="{{#if isLogin}}hidden{{/if}} {{#if isLoggedIn}}hidden{{/if}}  hover:bg-teal-600 inline-block border border-[1px] rounded-full px-3 py-1 mx-1 text-white border-white padding-right 2px">Login</a>
+          <a href="/register"
+            class="{{#if isRegister}}hidden{{/if}} {{#if isLoggedIn}}hidden{{/if}} hover:bg-teal-600 inline-block border border-[1px] rounded-full px-3 py-1 mx-1 text-white border-white">Sign
+            Up</a>
+
         </nav>
       </div>
 

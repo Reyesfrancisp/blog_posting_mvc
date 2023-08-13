@@ -1,0 +1,40 @@
+{{#each userPosts}}
+<div class="flex flex-col justify-center rounded-lg p-2 mx-2 my-8 shadow-lg hover:shadow-2xl mx-auto w-full max-w-4xl transform bg-gradient-to-b from-gray-500 to-gray-900 hover:-translate-y-1 hover:scale-105">
+  <section class="transform hover:shadow-xl bg-orange-300 rounded-lg p-4">
+    <p class="font-mono italic font-bold text-black text-center text-xl md:text-2xl lg:text-3xl">{{this.title}}</p>
+    <p class="font-sans truncate font-semibold text-center text-black p-4 m-4 bg-gray-200 text-sm md:text-base lg:text-lg">{{this.entry}}</p>
+    <a href="dashboard/{{id}}" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-md shadow-md my-2 mx-8 transition-colors duration-300">
+      Edit Post
+    </a>
+    <button class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-md shadow-md my-2 mx-8 transition-colors duration-300" onclick="deleteEntry('{{id}}')">
+      Delete Post
+    </button>
+  </section>
+</div>
+{{/each}}
+
+<script>
+  function deleteEntry(entryId) {
+    if (confirm('Are you sure you want to delete this entry?')) {
+      // Send a DELETE request to delete the entry
+      fetch('/post/' + entryId, {
+        method: 'DELETE'
+      })
+        .then(response => {
+          if (response.ok) {
+            // Entry deleted successfully
+            console.log('Entry deleted successfully');
+            // Redirect to the blog page
+            window.location.href = '/dashboard';
+          } else {
+            // Error deleting entry
+            console.error('Failed to delete entry');
+          }
+        })
+        .catch(error => {
+          // Error with the request
+          console.error(error);
+        });
+    }
+  }
+</script>

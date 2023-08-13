@@ -7,21 +7,22 @@
   </button>
 </div>
 
-{{!-- section that outputs the data from the tables --}}
-<section class = "flex-col p-8">
-  {{#each post}}
-  <!-- Clickable link with entry ID as a parameter -->
-<div class="flex flex-col justify-center rounded-lg p-2 mx-2 my-8 shadow-lg hover:shadow-2xl mx-auto w-full max-w-4xl transform bg-gradient-to-b from-gray-500 to-gray-900  hover:-translate-y-1 hover:scale-105">
-  <a href="/post/{{dataValues.id}}" class="block">
-    <section class="transform hover:shadow-xl bg-blue-300 rounded-lg p-4">
-      <p class="font-mono italic font-bold text-black text-center text-xl md:text-2xl lg:text-3xl">{{dataValues.title}}</p>
-      <p class="font-sans truncate font-semibold text-center text-black p-4 m-4 bg-gray-200 text-sm md:text-base lg:text-lg">{{dataValues.entry}}</p>
-    </section>
-  </a>
-</div>
+<section class="flex-col p-8">
+  {{#each posts}}
+  <div class="flex flex-col justify-center rounded-lg p-2 mx-2 my-8 shadow-lg hover:shadow-2xl mx-auto w-full max-w-4xl transform bg-gradient-to-b from-gray-500 to-gray-900 hover:-translate-y-1 hover:scale-105">
+    <a href="/post/{{this.id}}" class="block">
+      <section class="transform hover:shadow-xl bg-blue-300 rounded-lg p-4">
+        <p class="font-mono italic font-bold text-black text-center text-xl md:text-2xl lg:text-3xl">{{this.title}}</p>
+        <p class="font-sans truncate font-semibold text-center text-black p-4 m-4 bg-gray-200 text-sm md:text-base lg:text-lg">{{this.entry}}</p>
+        <p class="font-sans text-center text-gray-600 text-sm">Posted by {{this.username}}</p>
+        <p class="font-sans text-center text-gray-600 text-sm">Updated on {{formatDate this.updatedAt}}</p> <!-- Use the formatDate helper -->
+      </section>
+    </a>
+  </div>
   {{/each}}
-
 </section>
+
+
 
 <script>
   function redirectToEntry() {

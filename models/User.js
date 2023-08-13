@@ -21,7 +21,7 @@ User.init({
     unique: true,
     allowNull: false,
     validate: {
-      min: 5
+      min: 2
     }
   },
 

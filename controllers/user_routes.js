@@ -4,7 +4,7 @@ const User = require("../models/User");
 
 
 router.post("/login", async (req, res) => {
- console.log("Got into post login route");
+  console.log("Got into post login route");
   try {
     const formIdentifier = req.body.email; // The name of the input field is email in handlebars
     const formPassword = req.body.password;
@@ -40,8 +40,8 @@ router.post("/login", async (req, res) => {
 
     // Handle invalid password
     if (!isValidPass) {
-      console.log("password invalid")
-      return res.redirect("/login");
+      console.log("password invalid");
+      return res.render("login", { showError: true }); // Pass the showError variable
     }
 
     // User has been validated, create a session
@@ -73,14 +73,14 @@ router.post('/register', async (req, res) => {
 
     if (password !== verifyPassword) {
       // If passwords don't match, stop the registration process
-     
-    return res.render('register', { errorMessage: "Please make sure your passwords match and they are valid."});
+
+      return res.render('register', { errorMessage: "Please make sure your passwords match and they are valid." });
     }
 
     // Check if the email is already taken
     const existingEmail = await User.findOne({ where: { email: req.body.email } });
     if (existingEmail) {
-     
+
       return res.render('register', { errorMessage: "Email is already taken." });
     }
 
@@ -96,7 +96,8 @@ router.post('/register', async (req, res) => {
     const newUser = await User.create({
       email: req.body.email,
       username: req.body.username,
-      password: req.body.password});
+      password: req.body.password
+    });
 
     req.session.user_id = newUser.id;
     console.log("Created ID");
@@ -106,12 +107,9 @@ router.post('/register', async (req, res) => {
     // Log the error message to the console
     console.error(err.message);
 
-    return res.render("register", { errorMessage: err.message});
+    return res.render("register", { errorMessage: err.message });
   }
 });
-
-
-
 
 //log out user
 router.get("/logout", (req, res) => {
@@ -119,11 +117,5 @@ router.get("/logout", (req, res) => {
 
   res.redirect("/");
 });
-
-
-router.get("*", (req,res) =>
-{
-  res.redirect("/");
-})
 
 module.exports = router;

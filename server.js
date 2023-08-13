@@ -3,6 +3,13 @@ require("dotenv").config();
 const express = require("express");
 const { engine } = require("express-handlebars");
 const session = require("express-session");
+const Handlebars = require("handlebars");
+const moment = require("moment"); // Import the moment library
+
+// Register a Handlebars helper to format the date and time
+Handlebars.registerHelper("formatDate", function (date) {
+  return moment(date).format("MMMM D, YYYY, h:mm A");
+});
 
 // Import our db connection
 const db = require("./db/connection");

@@ -9,6 +9,14 @@ Comment.init(
       type: DataTypes.TEXT,
       allowNull: true,
     },
+  
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        min: 2
+      }
+    },
   },
   {
     sequelize: db,
