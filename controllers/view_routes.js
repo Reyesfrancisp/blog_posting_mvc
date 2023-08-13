@@ -12,24 +12,6 @@ function isAuthenticated(req, res, next) {
   next();
 }
 
-// Login page
-router.get("/login", (req, res) => {
-  console.log ("Triggered get route for login");
-
-  res.render("login", {
-    isLogin: true
-  });
-});
-
-// Register Page
-router.get("/register", (req, res) => {
-  console.log("got into the get route for register");
-
-  res.render("register", {
-    isRegister: true
-  });
-});
-
 // Homepage display all posts
 router.get("/", async (req, res) => {
   console.log("Got into the get route");
@@ -48,25 +30,41 @@ router.get("/", async (req, res) => {
   }
 });
 
+// Login page
+router.get("/login", (req, res) => {
+  console.log ("Triggered get route for login");
+
+  res.render("login", {
+    isLogin: true
+  });
+});
+
+// Register Page
+router.get("/register", (req, res) => {
+  console.log("got into the get route for register");
+
+  res.render("register", {
+    isRegister: true
+  });
+});
+
+
+
 
 // specific post
 router.get("/post/:id", async (req, res) => {
   console.log("got into post:id route");
   try {
-    const user = await User.findByPk(req.session.user_id, {
-      include: Post, // Include the Post model
-      include: Comment
+    // Fetch the post and its associated comments
+    const postId = req.params.id;
+    const singlePost = await Post.findByPk(postId, {
+      include: [
+        {
+          model: Comment,
+          required: false // Fetch associated comments even if there are none
+        }
+      ]
     });
-
-    const postId = req.params.id; // Get the post ID from the URL parameter
-    console.log (postId);
-    const singlePost = await Post.findOne({
-      where: {
-        id: postId
-      },
-      raw: true
-    });
-    console.log("This is the single post info: ", singlePost);
 
     if (!singlePost) {
       // Handle the case if the post is not found
@@ -74,20 +72,16 @@ router.get("/post/:id", async (req, res) => {
     }
 
     // Determine if the current user is the author of the post
+    const isAuthor = req.session.user_id === singlePost.userId;
 
-    const isAuthor = user.id === singlePost.userId;
-
-    if (isAuthor)
-    {
-    res.render("dashboard", {
-      post: singlePost,
-      email: user.email,
-      isAuthor: isAuthor, // Pass the isAuthor flag to the template
-      comments: Comment// Display the comments of that post if there are any
+    console.log("before render in code.");
+   await res.render("dashboard", {
+      title: singlePost.title,
+      entry: singlePost.entry,
+      isAuthor: isAuthor,
+      comments: singlePost.Comments // Pass the comments to the template
     });
-
-  }
-
+    console.log("after render in code.");
 
   } catch (error) {
     // Handle any errors
@@ -103,5 +97,7 @@ router.get("/entry", isAuthenticated, async (req, res) => {
     email: user.email
   });
 });
+
+
 
 module.exports = router;

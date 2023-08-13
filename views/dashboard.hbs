@@ -10,13 +10,13 @@
       </svg>
       Back
     </a>
-    <form class=" flex flex-col m-4 p-4" action="/post/{{post.id}}" method="POST">
+    <form class=" flex flex-col m-4 p-4" action="/post/{{id}}" method="POST">
       <label for="title" class="text-lg font-semibold mb-2">Title:</label>
       <input class="uppercase border border-gray-300 rounded-md py-2 px-3 mb-4" type="text" id="title" name="title"
-        value="{{post.title}}">
+        value="{{title}}">
       <label for="entry" class="text-lg font-semibold mb-2">Entry:</label>
       <textarea id="entry" name="entry"
-        class="border border-gray-300 rounded-md py-2 px-3 h-40 resize-none">{{post.entry}}</textarea>
+        class="border border-gray-300 rounded-md py-2 px-3 h-40 resize-none">{{entry}}</textarea>
       <button type="submit"
         class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-md shadow-md my-2 mx-8 transition-colors duration-300">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline-block mr-2" viewBox="0 0 24 24" fill="none"
@@ -28,7 +28,7 @@
 
       <button
         class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-md shadow-md my-2 mx-8 transition-colors duration-300"
-        id="deleteButton" onclick="deleteEntry('{{post.id}}')">
+        id="deleteButton" onclick="deleteEntry('{{id}}')">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline-block mr-2" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M6 18L18 6M6 6l12 12" />
@@ -45,27 +45,48 @@
 {{#unless isAuthor}}
   <div class="flex flex-col justify-center rounded-lg p-2 mx-2 my-8 shadow-lg hover:shadow-2xl mx-auto w-full max-w-4xl transform bg-gradient-to-b from-gray-500 to-gray-900  hover:-translate-y-1 hover:scale-105">
     <section class="transform hover:shadow-xl bg-blue-300 rounded-lg p-4">
-      <p class="font-mono italic font-bold text-black text-center text-xl md:text-2xl lg:text-3xl">{{post.title}}</p>
-      <p class="font-sans truncate font-semibold text-center text-black p-4 m-4 bg-gray-200 text-sm md:text-base lg:text-lg">{{post.entry}}</p>
+      <p class="font-mono italic font-bold text-black text-center text-xl md:text-2xl lg:text-3xl">{{title}}</p>
+      <p class="font-sans truncate font-semibold text-center text-black p-4 m-4 bg-gray-200 text-sm md:text-base lg:text-lg">{{entry}}</p>
     </section>
 </div>
 {{/unless}}
 {{!-- How would I add comments below this and make the blog post just show up regularly in handlebars if they aren't the author of the post --}}
 
+{{#if comments}}
 <section class="flex-col p-8">
-  <div class="flex flex-col justify-center rounded-lg p-2 mx-2 my-8 shadow-lg hover:shadow-2xl mx-auto w-full max-w-4xl transform bg-gradient-to-b from-gray-500 to-gray-900  hover:-translate-y-1 hover:scale-105">
-    <section class="transform hover:shadow-xl bg-blue-300 rounded-lg p-4">
-      <p class="font-mono italic font-bold text-black text-center text-xl md:text-2xl lg:text-3xl">{{title}}</p>
-      <p class="font-sans truncate font-semibold text-center text-black p-4 m-4 bg-gray-200 text-sm md:text-base lg:text-lg">{{entry}}</p>
+  <div class="flex flex-col justify-center rounded-lg p-2 mx-2 my-8 shadow-lg hover:shadow-2xl mx-auto w-full max-w-4xl transform bg-gradient-to-b from-gray-500 to-gray-900 hover:-translate-y-1 hover:scale-105">
+    <section class="transform hover:shadow-xl bg-orange-300 rounded-lg p-4">
       <!-- Display comments below the blog post -->
       <div class="comment">
         {{#each comments}}
-          <p>{{this.text}}</p>
+          <div class="comment-item">
+            <p>{{this.text}}</p>
+            {{#if isAuthor}} <!-- Show delete button for comments by the same user -->
+              <form action="/delete-comment/{{this.id}}" method="post">
+                <button type="submit" class="delete-button">Delete</button>
+              </form>
+            {{/if}}
+          </div>
         {{/each}}
       </div>
     </section>
   </div>
 </section>
+{{/if}}
+
+{{#if isAuthenticated}} <!-- Show comment input for authenticated users -->
+<section class="flex-col p-8">
+  <div class="flex flex-col justify-center rounded-lg p-2 mx-2 my-8 shadow-lg hover:shadow-2xl mx-auto w-full max-w-4xl transform bg-gradient-to-b from-gray-500 to-gray-900 hover:-translate-y-1 hover:scale-105">
+    <section class="transform hover:shadow-xl bg-orange-300 rounded-lg p-4">
+      <h3>Add a Comment</h3>
+      <form action="/add-comment/{{post.id}}" method="post">
+        <textarea name="commentText" rows="3" required></textarea>
+        <button type="submit">Add Comment</button>
+      </form>
+    </section>
+  </div>
+</section>
+{{/if}}
 
 
 
@@ -73,15 +94,15 @@
   function deleteEntry(entryId) {
     if (confirm('Are you sure you want to delete this entry?')) {
       // Send a DELETE request to delete the entry
-      fetch('/mood/' + entryId, {
+      fetch('/post/' + entryId, {
         method: 'DELETE'
       })
         .then(response => {
           if (response.ok) {
             // Entry deleted successfully
             console.log('Entry deleted successfully');
-            // Redirect to the mood page
-            window.location.href = '/mood';
+            // Redirect to the blog page
+            window.location.href = '/';
           } else {
             // Error deleting entry
             console.error('Failed to delete entry');
