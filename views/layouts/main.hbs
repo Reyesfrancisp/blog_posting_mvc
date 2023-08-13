@@ -5,24 +5,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blogzone</title>
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="css/style.css">
+
 
 </head>
 
 <body>
-  <div class="min-h-screen bg-gradient-to-b from-purple-400 via-purple-500 to-purple-700">
-       <header>
+  <div class="min-h-screen bg-gradient-to-br from-emerald-500 via-emerald-400 to-emerald-700">
+       <header class = "bg-neutral-700">
 
     <div class="flex justify-between items-center"> <!-- Flexbox container for centering on small screens and left-aligning on large screens -->
       <h1 class="text-5xl m-2 p-2">
         <a href="/">
-        <span class="text-sky-600">
+        <span class="text-sky-400">
           Blog
         </span>
-        <span class="bg-gradient-to-r text-transparent from-red-500 to-orange-500 bg-clip-text">
+        <span class="bg-gradient-to-r text-transparent from-yellow-500 to-orange-500 bg-clip-text">
           Zone
         </span>
         </a>
@@ -60,7 +58,7 @@
       <a href="/register" class="{{#if isRegister}}hidden{{/if}} hover:bg-teal-600 text-white block my-2">Sign Up</a>
       {{/if}}
       {{/if}}
-      <p class="{{#if isHome}}hidden{{/if}}{{#if isLogin}} hidden{{/if}}{{#if isRegister}} hidden{{/if}} my-2 text-white">Welcome,
+      <p class="{{#if isLogin}} hidden{{/if}}{{#if isRegister}} hidden{{/if}} my-2 text-white">Welcome,
         {{email}}</p>
     </nav>
 

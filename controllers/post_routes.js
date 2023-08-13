@@ -1,74 +1,84 @@
 require("dotenv").config();
-const router = require('express').Router();
-const User = require('../models/User');
-const Post = require('../models/Post');
-const Comment = require('../models/Comment');
+const router = require("express").Router();
+const User = require("../models/User");
+const Post = require("../models/Post");
+const Comment = require("../models/Comment");
 
 // Middleware
 function isAuthenticated(req, res, next) {
   const isAuthenticated = req.session.user_id;
 
-  if (!isAuthenticated) return res.redirect('/login');
+  if (!isAuthenticated) return res.redirect("/login");
 
   next();
 }
 
 
 
-router.post('/entry', async (req, res) => {
+router.post("/entry", async (req, res) => {
   try {
     const user = await User.findByPk(req.session.user_id);
     const newEntry = req.body.entry;
     const newTitle = req.body.title.toUpperCase();
 
+    // Validate input against model's validation rules
+    const validationResult = Post.build({ title: newTitle }).validate();
 
-    Post.create({ userId: user.id, title: newTitle, entry: newEntry});
-    // redirect them after the data is obtained
-    res.redirect('/');
+    if (validationResult !== undefined) {
+      // If validation fails, validationResult will contain error details
+      res.status(400).send("Validation error: " + validationResult.errors[0].message);
+      return;
+    }
 
-  }
-  catch (err) {
+    // If validation passes, create a new entry
+    await Post.create({ userId: user.id, title: newTitle, entry: newEntry });
+
+    // Redirect after the data is obtained
+    res.redirect("/");
+  } catch (err) {
     console.log(err);
+    res.status(500).send("An error occurred");
   }
-
 });
 
-router.post('/:id', isAuthenticated, async (req, res) => {
+
+router.post("/post/:id", isAuthenticated, async (req, res) => {
   try {
     const user = await User.findByPk(req.session.user_id, {
-      include: Post
+      include: Comment
     });
 
-    const moodId = req.params.id;
+    const blogId = req.params.id;
     const blogPost = await Post.findOne({
       where: {
-        id: moodId,
+        id: blogId,
         userId: user.id
       }
     });
 
-    if (!mood) {
-      return res.status(404).send('Mood not found');
+    if (!blogPost) {
+      return res.status(404).send("Blog post not found");
     }
 
-    // Update the mood entry with the new values
+    // Update the blog post entry with the new values
     blogPost.set({
       title: req.body.title.toUpperCase(),
       entry: req.body.entry
     });
 
-    await post.save();
+    await blogPost.save();
 
-    // Redirect the user to the same page with updated info
-    res.redirect('/:id');
+    // Redirect the user to the updated post page
+    res.redirect(`/post/${blogId}`);
   } catch (error) {
     console.error(error);
-    res.status(500).send('An error occurred');
+    res.status(500).send("An error occurred");
   }
 });
 
+
 // provide the route to add a comment to a blog post
-router.post('/:postId/comments', isAuthenticated, async (req, res) => {
+router.post("/post/:postId/comments", isAuthenticated, async (req, res) => {
   try {
     const user = await User.findByPk(req.session.user_id);
     const postId = req.params.postId;
@@ -82,7 +92,7 @@ router.post('/:postId/comments', isAuthenticated, async (req, res) => {
     });
 
     if (!post) {
-      return res.status(404).send('Post not found');
+      return res.status(404).send("Post not found");
     }
 
     // Create a new comment
@@ -91,18 +101,18 @@ router.post('/:postId/comments', isAuthenticated, async (req, res) => {
       postId: post.id,
       userId: user.id,
     });
-
+    console.log("The comment in the post route is: ", comment);
     // Redirect back to the blog post or somewhere else
     res.redirect(`/posts/${postId}`);
   } catch (error) {
     console.error(error);
-    res.status(500).send('An error occurred');
+    res.status(500).send("An error occurred");
   }
 });
 
 
-//provide a button to delete a comment if it's from that user
-router.delete('/:postId/comments/:commentId', isAuthenticated, async (req, res) => {
+//provide a button to delete a comment if it"s from that user
+router.delete("/:postId/comments/:commentId", isAuthenticated, async (req, res) => {
   try {
     const user = await User.findByPk(req.session.user_id, {
       include: [Post, Comment],
@@ -120,7 +130,7 @@ router.delete('/:postId/comments/:commentId', isAuthenticated, async (req, res) 
     });
 
     if (!post) {
-      return res.status(404).send('Post not found');
+      return res.status(404).send("Post not found");
     }
 
     // Find the comment to delete under the specified post
@@ -132,22 +142,22 @@ router.delete('/:postId/comments/:commentId', isAuthenticated, async (req, res) 
     });
 
     if (!comment) {
-      return res.status(404).send('Comment not found');
+      return res.status(404).send("Comment not found");
     }
 
     // Delete the comment from the database
     await comment.destroy();
 
     // Redirect back to the blog post or somewhere else
-    res.redirect('/');
+    res.redirect("/");
   } catch (error) {
     console.error(error);
-    res.status(500).send('An error occurred');
+    res.status(500).send("An error occurred");
   }
 });
 
 //route to delete the blog post
-router.delete('/:blogPostId', isAuthenticated, async (req, res) => {
+router.delete("/post/:blogPostId", isAuthenticated, async (req, res) => {
   try {
     const user = await User.findByPk(req.session.user_id, {
       include: [Post, Comment], // Include both Post and Comment associations
@@ -162,17 +172,17 @@ router.delete('/:blogPostId', isAuthenticated, async (req, res) => {
     });
 
     if (!post) {
-      return res.status(404).send('Post not found');
+      return res.status(404).send("Post not found");
     }
 
     // Delete the post entry from the database
     await post.destroy();
 
     // Redirect to the main page
-    res.redirect('/');
+    res.redirect("/");
   } catch (error) {
     console.error(error);
-    res.status(500).send('An error occurred');
+    res.status(500).send("An error occurred");
   }
 });
 

@@ -1,8 +1,10 @@
-const router = require('express').Router();
-const User = require('../models/User');
+
+const router = require("express").Router();
+const User = require("../models/User");
 
 
-router.post('/login', async (req, res) => {
+router.post("/login", async (req, res) => {
+ console.log("Got into post login route");
   try {
     const formIdentifier = req.body.email; // The name of the input field is email in handlebars
     const formPassword = req.body.password;
@@ -19,7 +21,7 @@ router.post('/login', async (req, res) => {
         }
       });
     } else {
-      // Otherwise, assume it's a username and search by username
+      // Otherwise, assume it"s a username and search by username
       user = await User.findOne({
         where: {
           username: formIdentifier
@@ -30,7 +32,7 @@ router.post('/login', async (req, res) => {
     // Handle user not found
     if (!user) {
       console.log("user not found")
-      return res.redirect('/register');
+      return res.redirect("/register");
     }
 
     // Password match
@@ -39,7 +41,7 @@ router.post('/login', async (req, res) => {
     // Handle invalid password
     if (!isValidPass) {
       console.log("password invalid")
-      return res.redirect('/login');
+      return res.redirect("/login");
     }
 
     // User has been validated, create a session
@@ -57,6 +59,9 @@ router.post('/login', async (req, res) => {
 
 
 router.post('/register', async (req, res) => {
+
+  console.log("activated register post route");
+  console.log(req.body);
   try {
     // ValidatePasswords function
     const password = req.body.password;
@@ -68,38 +73,40 @@ router.post('/register', async (req, res) => {
 
     if (password !== verifyPassword) {
       // If passwords don't match, stop the registration process
-      return res.redirect('/register');
+     
+    return res.render('register', { errorMessage: "Please make sure your passwords match and they are valid."});
     }
 
     // Check if the email is already taken
     const existingEmail = await User.findOne({ where: { email: req.body.email } });
     if (existingEmail) {
-      // Email is already taken, send a error message to the front end
-      // res.send('Email is already taken.' );
-      return res.redirect('/register');
+     
+      return res.render('register', { errorMessage: "Email is already taken." });
     }
 
     // Check if the username is already taken
     const existingUsername = await User.findOne({ where: { username: req.body.username } });
     if (existingUsername) {
       // Username is already taken, send a error message to the front end
-      // res.send('Username is already taken.' );
-      return res.redirect('/register');
-
+      // res.send( );
+      return res.render("register", { errorMessage: "Username is already taken." });
     }
 
     // Passwords match, and email/username are available, proceed with user creation
-    const newUser = await User.create(req.body);
+    const newUser = await User.create({
+      email: req.body.email,
+      username: req.body.username,
+      password: req.body.password});
+
     req.session.user_id = newUser.id;
-    console.log('Created ID');
-    res.redirect('/');
+    console.log("Created ID");
+    res.redirect("/");
 
   } catch (err) {
     // Log the error message to the console
-    console.error(err);
+    console.error(err.message);
 
-    // Handle other errors
-    return res.status(500).json('Internal Server Error');
+    return res.render("register", { errorMessage: err.message});
   }
 });
 
@@ -107,10 +114,16 @@ router.post('/register', async (req, res) => {
 
 
 //log out user
-router.get('/logout', (req, res) => {
+router.get("/logout", (req, res) => {
   req.session.destroy();
 
-  res.redirect('/');
+  res.redirect("/");
 });
+
+
+router.get("*", (req,res) =>
+{
+  res.redirect("/");
+})
 
 module.exports = router;

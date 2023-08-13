@@ -1,3 +1,5 @@
+
+    {{#if isAuthor}}
 <main class="bg-gray-300 py-4">
   <div class="max-w-2xl bg-gray-400 rounded-lg px-4 mx-auto my-8 py-8 shadow-lg justify-start">
     <a href="/mood"
@@ -8,13 +10,13 @@
       </svg>
       Back
     </a>
-    <form class=" flex flex-col m-4 p-4" action="/mood/{{this.id}}" method="POST">
+    <form class=" flex flex-col m-4 p-4" action="/post/{{post.id}}" method="POST">
       <label for="title" class="text-lg font-semibold mb-2">Title:</label>
       <input class="uppercase border border-gray-300 rounded-md py-2 px-3 mb-4" type="text" id="title" name="title"
-        value="{{this.title}}">
+        value="{{post.title}}">
       <label for="entry" class="text-lg font-semibold mb-2">Entry:</label>
       <textarea id="entry" name="entry"
-        class="border border-gray-300 rounded-md py-2 px-3 h-40 resize-none">{{this.entry}}</textarea>
+        class="border border-gray-300 rounded-md py-2 px-3 h-40 resize-none">{{post.entry}}</textarea>
       <button type="submit"
         class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-md shadow-md my-2 mx-8 transition-colors duration-300">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline-block mr-2" viewBox="0 0 24 24" fill="none"
@@ -26,7 +28,7 @@
 
       <button
         class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-md shadow-md my-2 mx-8 transition-colors duration-300"
-        id="deleteButton" onclick="deleteEntry('{{this.id}}')">
+        id="deleteButton" onclick="deleteEntry('{{post.id}}')">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 inline-block mr-2" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M6 18L18 6M6 6l12 12" />
@@ -38,6 +40,33 @@
   </div>
 
 </main>
+
+  {{/if}}
+{{#unless isAuthor}}
+  <div class="flex flex-col justify-center rounded-lg p-2 mx-2 my-8 shadow-lg hover:shadow-2xl mx-auto w-full max-w-4xl transform bg-gradient-to-b from-gray-500 to-gray-900  hover:-translate-y-1 hover:scale-105">
+    <section class="transform hover:shadow-xl bg-blue-300 rounded-lg p-4">
+      <p class="font-mono italic font-bold text-black text-center text-xl md:text-2xl lg:text-3xl">{{post.title}}</p>
+      <p class="font-sans truncate font-semibold text-center text-black p-4 m-4 bg-gray-200 text-sm md:text-base lg:text-lg">{{post.entry}}</p>
+    </section>
+</div>
+{{/unless}}
+{{!-- How would I add comments below this and make the blog post just show up regularly in handlebars if they aren't the author of the post --}}
+
+<section class="flex-col p-8">
+  <div class="flex flex-col justify-center rounded-lg p-2 mx-2 my-8 shadow-lg hover:shadow-2xl mx-auto w-full max-w-4xl transform bg-gradient-to-b from-gray-500 to-gray-900  hover:-translate-y-1 hover:scale-105">
+    <section class="transform hover:shadow-xl bg-blue-300 rounded-lg p-4">
+      <p class="font-mono italic font-bold text-black text-center text-xl md:text-2xl lg:text-3xl">{{title}}</p>
+      <p class="font-sans truncate font-semibold text-center text-black p-4 m-4 bg-gray-200 text-sm md:text-base lg:text-lg">{{entry}}</p>
+      <!-- Display comments below the blog post -->
+      <div class="comment">
+        {{#each comments}}
+          <p>{{this.text}}</p>
+        {{/each}}
+      </div>
+    </section>
+  </div>
+</section>
+
 
 
 <script>

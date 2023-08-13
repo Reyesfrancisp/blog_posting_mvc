@@ -1,11 +1,33 @@
 
-<form id="login-form" class="login flex flex-col" action="/login" method="POST">
+<div class="max-w-screen-md mx-auto bg-gray-300 p-8 my-8 rounded shadow-lg">
+  <form id="login-form" class="login flex flex-col" action="/login" method="POST">
     <input class="user my-2 px-4" name="email" type="text" placeholder="username or email">
     <input class="pass my-2 px-4" name="password" type="password" placeholder="enter password">
-    <button class="my-3 hover:bg-teal-600 rounded-full border-solid border-2 border-white py-4 px-8 text-white font-bold text-sm ">Log in</button>
-</form>
+    <button class="my-3 bg-teal-400 hover:bg-teal-600 rounded-full border-solid border-2 border-white py-4 px-8 text-white font-bold text-lg">Log in</button>
+  </form>
+</div>
 
+<!-- Modal for displaying errors -->
+<div class="fixed inset-0 flex items-center justify-center z-50 hidden" id="errorModal">
+  <div class="bg-white rounded-lg p-8 shadow-md">
+    <h3 class="text-lg font-semibold mb-4">Error</h3>
+    <p id="errorText"></p>
+    <button class="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600" id="closeErrorModal">Close</button>
+  </div>
+</div>
 
-<div id="error-message-container-login"></div>
+<script>
+  // Listen for the error response and show the modal
+  document.addEventListener('DOMContentLoaded', () => {
+    const errorText = '{{errorMessage}}';
+    if (errorText) {
+      document.getElementById('errorText').innerText = errorText;
+      document.getElementById('errorModal').classList.remove('hidden');
+    }
+  });
 
-<script src="/js/error.js"></script>
+  // Close the modal when the close button is clicked
+  document.getElementById('closeErrorModal').addEventListener('click', () => {
+    document.getElementById('errorModal').classList.add('hidden');
+  });
+</script>
