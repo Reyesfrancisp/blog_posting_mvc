@@ -18,6 +18,8 @@ function isAuthenticated(req, res, next) {
 router.get("/", async (req, res) => {
   console.log("Got into the get route");
 
+  const isLoggedIn = !!req.session.user_id;
+
   const user = await User.findByPk(req.session.user_id);
   try {
     // Fetch all posts from the database
@@ -35,7 +37,8 @@ router.get("/", async (req, res) => {
       res.render("index", {
         post: post, // Pass the posts data
         user: user.username,
-        isHome: true
+        isHome: true,
+        isLoggedIn: isLoggedIn
       });
     }
 
@@ -49,9 +52,11 @@ router.get("/", async (req, res) => {
 // Login page
 router.get("/login", (req, res) => {
   console.log("Triggered get route for login");
+  const isLoggedIn = !!req.session.user_id;
 
   res.render("login", {
-    isLogin: true
+    isLogin: true,
+    isLoggedIn: isLoggedIn
   });
 });
 
@@ -59,16 +64,19 @@ router.get("/login", (req, res) => {
 router.get("/register", (req, res) => {
   console.log("got into the get route for register");
 
+  const isLoggedIn = !!req.session.user_id;
+
   res.render("register", {
-    isRegister: true
+    isRegister: true,
+    isLoggedIn: isLoggedIn
   });
 });
 
-
-
-
 // specific post
 router.get("/post/:id", async (req, res) => {
+
+  const isLoggedIn = !!req.session.user_id;
+
   console.log("got into post:id route");
   try {
     // Fetch the post and its associated comments
@@ -91,7 +99,8 @@ router.get("/post/:id", async (req, res) => {
     const isAuthor = req.session.user_id === singlePost.authorId;
     const isAuthenticated = req.session.user_id;
     console.log("before render in code.");
-    await res.render("dashboard", {
+    await res.render("blogpost", {
+      isLoggedIn: isLoggedIn,
       id: singlePost.id,
       title: singlePost.title,
       entry: singlePost.entry,
@@ -110,12 +119,11 @@ router.get("/post/:id", async (req, res) => {
 
 router.get("/entry", isAuthenticated, async (req, res) => {
   const user = await User.findByPk(req.session.user_id);
-
+  const isLoggedIn = !!req.session.user_id;
   res.render("entry", {
-    user: user.username
+    user: user.username,
+    isLoggedIn: isLoggedIn
   });
 });
-
-
 
 module.exports = router;
