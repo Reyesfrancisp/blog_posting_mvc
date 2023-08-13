@@ -15,7 +15,6 @@
     <header class="bg-neutral-700">
 
       <div class="flex justify-between items-center">
-        <!-- Flexbox container for centering on small screens and left-aligning on large screens -->
         <h1 class="text-5xl m-2 p-2">
           <a href="/">
             <span class="text-sky-400">
@@ -26,54 +25,71 @@
             </span>
           </a>
         </h1>
-        <button id="menuButton" class="md:hidden block pr-2">
-          <i class="fas fa-bars text-white text-2xl"></i>
-        </button>
 
+        <div class="md:flex md:justify-between items-center">
+          <nav class="hidden md:flex mr-10 justify-center md:justify-end font-medium" id="navLinks">
+            <!-- Your existing nav links -->
+            {{#if isLoggedIn}}
+            <a href="/logout"
+              class="inline-block bg-blue-500  hover:bg-teal-600 border border-[1px] rounded-full px-3 py-1 mx-1 text-black border-white">Log
+              Out</a>
+            <a href="/dashboard"
+              class="inline-block bg-blue-500  hover:bg-teal-600 border border-[1px] rounded-full px-3 py-1 mx-1 text-black border-white">Dashboard</a>
+            <p class="inline-block bg-neutral-400 px-3 py-1 mx-1 text-black border-white">
+              Welcome, {{user}}</p>
+            {{/if}}
 
-        <nav class="hidden md:flex mr-10 justify-center md:justify-end font-medium" id="navLinks">
-          <!-- Hide nav links on small screens, show on large screens -->
-          {{#if isLoggedIn}}
-          <a href="/logout"
-            class="inline-block hover:bg-teal-600 border border-[1px] rounded-full px-3 py-1 mx-1 text-black border-white">Log
-            Out</a>
-          <a href="/dashboard"
-            class="inline-block hover:bg-teal-600 border border-[1px] rounded-full px-3 py-1 mx-1 text-black border-white">Dashboard</a>
-          <p class="inline-block bg-neutral-600 border border-[1px] rounded-full px-3 py-1 mx-1 text-black border-white">Welcome,
-            {{user}}</p>
-          {{/if}}
+            <a href="/login"
+              class="{{#if isLogin}}hidden{{/if}} {{#if isLoggedIn}}hidden{{/if}} bg-blue-500 hover:bg-teal-600 inline-block border border-[1px] rounded-full px-3 py-1 mx-1 text-white border-white padding-right-2px">Login</a>
+            <a href="/register"
+              class="{{#if isRegister}}hidden{{/if}} {{#if isLoggedIn}}hidden{{/if}} bg-blue-500 hover:bg-teal-600 inline-block border border-[1px] rounded-full px-3 py-1 mx-1 text-white border-white">Sign
+              Up</a>
+          </nav>
 
-          <a href="/login"
-            class="{{#if isLogin}}hidden{{/if}} {{#if isLoggedIn}}hidden{{/if}}  hover:bg-teal-600 inline-block border border-[1px] rounded-full px-3 py-1 mx-1 text-white border-white padding-right 2px">Login</a>
-          <a href="/register"
-            class="{{#if isRegister}}hidden{{/if}} {{#if isLoggedIn}}hidden{{/if}} hover:bg-teal-600 inline-block border border-[1px] rounded-full px-3 py-1 mx-1 text-white border-white">Sign
-            Up</a>
-
-        </nav>
+          <!-- Mobile navigation toggle -->
+          <button id="mobileNavToggle" class="md:hidden">
+            <svg class="h-6 w-6 text-gray-600" fill="none" stroke-linecap="round" stroke-linejoin="round"
+              stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+              <path d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+        </div>
       </div>
 
-      <!-- Mobile Navigation Menu (hidden by default, shown when hamburger button is clicked) -->
-      <nav class="hidden text-center font-medium" id="mobileMenu">
-        {{#if isLoggedIn}} <a href="/logout" class="hover:bg-teal-600 block my-2 text-white" style="color: white;">Log
-          Out</a>
-        <a href="/login"
-          class="{{#if isLogin}}hidden{{/if}} hover:bg-teal-600 text-white block my-2 padding-right 2px">Login</a>
-        <a href="/register" class="{{#if isRegister}}hidden{{/if}} hover:bg-teal-600 text-white block my-2">Sign Up</a>
-        {{/if}}
-        <p class="{{#if isLogin}} hidden{{/if}}{{#if isRegister}} hidden{{/if}} my-2 text-white">Welcome,
-          {{user}}</p>
-      </nav>
+      <!-- Mobile Navigation Menu (hidden by default, shown when mobileNavToggle is clicked) -->
+      <nav class="hidden text-center font-medium md:hidden my-4 p-2" id="mobileNavMenu">
+        <!-- Your existing mobile nav links -->
+        {{#if isLoggedIn}}
+        <a href="/logout" class="bg-blue-500 hover:bg-teal-600 block my-5 py-3 text-white">Log Out</a>
+        <a href="/dashboard" class="bg-blue-500 hover:bg-teal-600 block my-5 py-3 text-white">Dashboard</a>
+        <p class="my-5 py-3 text-white">Welcome, {{user}}</p>
 
-      <script>
-        document.getElementById('menuButton').addEventListener('click', function () {
-          let mobileMenu = document.getElementById('mobileMenu');
-          mobileMenu.classList.toggle('hidden');
-        });
-      </script>
+        {{/if}}
+        {{#unless isLoggedIn}}
+        <a href="/login"
+          class="{{#if isLogin}}hidden{{/if}} {{#if isLoggedin}}hidden{{/if}} bg-blue-500 hover:bg-teal-600 text-white block my-5 py-3">Login</a>
+        <a href="/register"
+          class="{{#if isRegister}}hidden{{/if}} {{#if isLoggedin}}hidden{{/if}} bg-blue-500  hover:bg-teal-600 text-white block my-5 py-3">Sign
+          Up</a>
+        {{/unless}}
+
+      </nav>
     </header>
-    {{{body}}}
+
+
+
+  </header>
+  {{{body}}}
 
   </div>
+  <script>
+    const mobileNavToggle = document.getElementById('mobileNavToggle');
+    const mobileNavMenu = document.getElementById('mobileNavMenu');
+
+    mobileNavToggle.addEventListener('click', () => {
+      mobileNavMenu.classList.toggle('hidden');
+    });
+  </script>
 </body>
 
 </html>

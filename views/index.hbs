@@ -1,11 +1,9 @@
-<div class="p-4 m-4 flex justify-center items-center">
-  <button class="new-entry bg-gradient-to-r from-orange-400 to-amber-500 hover:from-orange-500 hover:to-amber-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transition-colors duration-300" onclick="redirectToEntry()" style="width: 200px;">
-    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2 float-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 20h.01M6 4h10a4 4 0 014 4v8a2 2 0 01-2 2H6a2 2 0 01-2-2V8a4 4 0 014-4z"/>
-    </svg>
-    <span class="inline-block">Create Blog Post</span>
-  </button>
+<div class="bg-gray-100 py-12">
+  <h1 class="text-4xl md:text-6xl font-extrabold text-slate-600 text-center">
+    Welcome to <span class="text-blue-600">Blog<span class="bg-gradient-to-r text-transparent from-yellow-500 to-orange-500 bg-clip-text">Zone!</span></span>
+  </h1>
 </div>
+
 
 <section class="flex-col p-8">
   {{#each posts}}
@@ -22,6 +20,14 @@
   {{/each}}
 </section>
 
+<div class="p-4 m-4 flex justify-center items-center">
+  <button class="new-entry bg-gradient-to-r from-orange-400 to-amber-500 hover:from-orange-500 hover:to-amber-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:shadow-xl transition-colors duration-300" onclick="redirectToEntry()" style="width: 200px;">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2 float-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 20h.01M6 4h10a4 4 0 014 4v8a2 2 0 01-2 2H6a2 2 0 01-2-2V8a4 4 0 014-4z"/>
+    </svg>
+    <span class="inline-block">Create Blog Post</span>
+  </button>
+</div>
 
 
 <script>
