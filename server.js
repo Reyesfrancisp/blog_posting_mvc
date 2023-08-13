@@ -12,6 +12,8 @@ const user_routes = require("./controllers/user_routes");
 const view_routes = require("./controllers/view_routes");
 const post_routes = require("./controllers/post_routes");
 
+//import associations
+const associations = require("./models/Associations");
 
 const app = express();
 const PORT = process.env.PORT || 3333;
@@ -49,6 +51,10 @@ app.use("/", [post_routes, view_routes, user_routes]);
 // Connect to the db and create all tables based off of our models
 db.sync({ force: false })
   .then(() => {
+    //setup associations
+    associations.User;
+    associations.Post;
+    associations.Comment;
     // Start server
     app.listen(PORT, () => console.log("Server started on port %s", PORT));
   });

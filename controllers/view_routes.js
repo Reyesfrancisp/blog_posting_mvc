@@ -3,7 +3,7 @@ const User = require("../models/User");
 const Post = require("../models/Post");
 const Comment = require("../models/Comment");
 
-// Middleware
+// Middleware to see if they're not logged in and redirect them before accessing that part
 function isAuthenticated(req, res, next) {
   const isAuthenticated = req.session.user_id;
 
@@ -12,17 +12,33 @@ function isAuthenticated(req, res, next) {
   next();
 }
 
+//make middleware to check if somebody is logged in
+
 // Homepage display all posts
 router.get("/", async (req, res) => {
   console.log("Got into the get route");
+
+  const user = await User.findByPk(req.session.user_id);
   try {
     // Fetch all posts from the database
     const post = await Post.findAll();
     console.log("This is the post data", post);
     // Render the "post" template and pass the posts data
-    res.render("index", {
-      post: post // Pass the posts data
-    });
+    if (user == null) {
+
+      await res.render("index", {
+        post: post, // Pass the posts data
+        isHome: true
+      });
+    }
+    else {
+      res.render("index", {
+        post: post, // Pass the posts data
+        user: user.username,
+        isHome: true
+      });
+    }
+
   } catch (error) {
     // Handle any errors
     console.error(error);
@@ -32,7 +48,7 @@ router.get("/", async (req, res) => {
 
 // Login page
 router.get("/login", (req, res) => {
-  console.log ("Triggered get route for login");
+  console.log("Triggered get route for login");
 
   res.render("login", {
     isLogin: true
@@ -72,13 +88,15 @@ router.get("/post/:id", async (req, res) => {
     }
 
     // Determine if the current user is the author of the post
-    const isAuthor = req.session.user_id === singlePost.userId;
-
+    const isAuthor = req.session.user_id === singlePost.authorId;
+    const isAuthenticated = req.session.user_id;
     console.log("before render in code.");
-   await res.render("dashboard", {
+    await res.render("dashboard", {
+      id: singlePost.id,
       title: singlePost.title,
       entry: singlePost.entry,
       isAuthor: isAuthor,
+      isAuthenticated: isAuthenticated,
       comments: singlePost.Comments // Pass the comments to the template
     });
     console.log("after render in code.");
@@ -94,7 +112,7 @@ router.get("/entry", isAuthenticated, async (req, res) => {
   const user = await User.findByPk(req.session.user_id);
 
   res.render("entry", {
-    email: user.email
+    user: user.username
   });
 });
 

@@ -15,23 +15,27 @@ function isAuthenticated(req, res, next) {
 
 
 
-router.post("/entry", async (req, res) => {
+router.post("/entry", isAuthenticated, async (req, res) => {
+  console.log("got into the entry route for posting");
   try {
     const user = await User.findByPk(req.session.user_id);
     const newEntry = req.body.entry;
     const newTitle = req.body.title.toUpperCase();
 
-    // Validate input against model's validation rules
-    const validationResult = Post.build({ title: newTitle }).validate();
+    // Create a new Post instance
+    const newPost = Post.build({ authorId: user.id, title: newTitle, entry: newEntry });
 
-    if (validationResult !== undefined) {
-      // If validation fails, validationResult will contain error details
-      res.status(400).send("Validation error: " + validationResult.errors[0].message);
+    // Validate the new Post instance
+    try {
+      await newPost.validate();
+    } catch (validationError) {
+      // If validation fails, validationError contains error details
+      res.status(400).send("Validation error: " + validationError.errors[0].message);
       return;
     }
 
-    // If validation passes, create a new entry
-    await Post.create({ userId: user.id, title: newTitle, entry: newEntry });
+    // If validation passes, save the new entry
+    await newPost.save();
 
     // Redirect after the data is obtained
     res.redirect("/");
@@ -40,6 +44,7 @@ router.post("/entry", async (req, res) => {
     res.status(500).send("An error occurred");
   }
 });
+
 
 
 router.post("/post/:id", isAuthenticated, async (req, res) => {
@@ -76,34 +81,29 @@ router.post("/post/:id", isAuthenticated, async (req, res) => {
   }
 });
 
-
-// provide the route to add a comment to a blog post
+// Provide the route to add a comment to a blog post
 router.post("/post/:postId/comments", isAuthenticated, async (req, res) => {
   try {
     const user = await User.findByPk(req.session.user_id);
     const postId = req.params.postId;
-    const { text } = req.body; // Assuming the comment text is sent in the request body
+    const text  = req.body; // Assuming the comment text is sent in the request body
 
     // Find the blog post by ID
-    const post = await Post.findOne({
-      where: {
-        id: postId,
-      },
-    });
+    const post = await Post.findByPk(postId);
 
     if (!post) {
       return res.status(404).send("Post not found");
     }
 
     // Create a new comment
-    const comment = await Comment.create({
+    await Comment.create({
       text: text,
       postId: post.id,
-      userId: user.id,
+      commenterId: user.id,
     });
-    console.log("The comment in the post route is: ", comment);
+
     // Redirect back to the blog post or somewhere else
-    res.redirect(`/posts/${postId}`);
+    res.redirect(`/post/${postId}`); // Use the correct URL pattern for post detail pages
   } catch (error) {
     console.error(error);
     res.status(500).send("An error occurred");

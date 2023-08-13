@@ -74,14 +74,14 @@
 </section>
 {{/if}}
 
-{{#if isAuthenticated}} <!-- Show comment input for authenticated users -->
+{{#if isAuthenticated}}
 <section class="flex-col p-8">
   <div class="flex flex-col justify-center rounded-lg p-2 mx-2 my-8 shadow-lg hover:shadow-2xl mx-auto w-full max-w-4xl transform bg-gradient-to-b from-gray-500 to-gray-900 hover:-translate-y-1 hover:scale-105">
     <section class="transform hover:shadow-xl bg-orange-300 rounded-lg p-4">
-      <h3>Add a Comment</h3>
-      <form action="/add-comment/{{post.id}}" method="post">
-        <textarea name="commentText" rows="3" required></textarea>
-        <button type="submit">Add Comment</button>
+      <h3 class="text-xl font-semibold mb-2">Add a Comment</h3>
+      <form action="/post/{{id}}/comments" method="post" class="space-y-3">
+        <textarea name="commentText" rows="3" required class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500"></textarea>
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-300">Add Comment</button>
       </form>
     </section>
   </div>
